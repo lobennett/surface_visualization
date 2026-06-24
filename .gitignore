@@ -1,0 +1,10 @@
+# Fetched surface data (regenerate with 00_fetch_surface.py)
+data/
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# OS
+.DS_Store

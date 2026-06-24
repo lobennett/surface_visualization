@@ -1,0 +1,6 @@
+nilearn>=0.10.3
+nibabel>=5.0
+plotly>=5.0
+matplotlib>=3.7
+numpy
+kaleido
