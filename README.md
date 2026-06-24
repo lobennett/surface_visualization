@@ -20,13 +20,15 @@ There is **no test suite** — this is a comparative reference, not a library.
 | [`01_nilearn.py`](01_nilearn.py)   | nilearn `plot_surf` | ✅ runnable |
 | [`02_nibabel.py`](02_nibabel.py)   | nibabel (GIFTI + FreeSurfer geometry) | ✅ runnable |
 | [`03_plotly.py`](03_plotly.py)     | Plotly interactive 3D mesh | ✅ runnable |
-| [`04_pysurfer.md`](04_pysurfer.md) | PySurfer / Mayavi | 📄 documented |
+| [`04_pysurfer.py`](04_pysurfer.py) | PySurfer / Mayavi | ✅ runnable (conda) |
 | [`05_freesurfer.md`](05_freesurfer.md) | FreeSurfer CLI (`freeview`, `mris_convert`) | 📄 documented |
 | [`06_matlab.md`](06_matlab.md)     | MATLAB (`read_surf.m`, SPM `gifti`) | 📄 documented |
 
-The runnable Python examples render headless (no display required). The
-documented examples are copy-paste snippets for environments that aren't assumed
-installed here (Mayavi, FreeSurfer, MATLAB).
+Scripts `01`–`03` render headless from the pip `requirements.txt`. `04` (PySurfer)
+needs a conda environment — see [`environment-pysurfer.yml`](environment-pysurfer.yml) —
+because Mayavi won't build against the VTK wheels on current Python. The
+remaining examples are copy-paste snippets for environments not assumed
+installed here (FreeSurfer, MATLAB).
 
 ## Quickstart
 
@@ -40,14 +42,23 @@ python 02_nibabel.py         # -> outputs/02_nibabel.png
 python 03_plotly.py          # -> outputs/03_plotly.html (+ .png)
 ```
 
+PySurfer needs its own conda environment:
+
+```bash
+conda env create -f environment-pysurfer.yml
+conda activate surface-pysurfer
+python 00_fetch_surface.py   # if data/ isn't populated yet
+python 04_pysurfer.py        # -> outputs/04_pysurfer.png
+```
+
 ## Rendered output
 
-All three runnable scripts render the **same** inflated left hemisphere
+All four runnable scripts render the **same** inflated left hemisphere
 (lateral view), each with its library's native plotting:
 
-| nilearn | nibabel + matplotlib | Plotly |
-|---------|----------------------|--------|
-| ![nilearn](outputs/01_nilearn.png) | ![nibabel](outputs/02_nibabel.png) | ![plotly](outputs/03_plotly.png) |
+| nilearn | nibabel + matplotlib | Plotly | PySurfer (Mayavi) |
+|---------|----------------------|--------|-------------------|
+| ![nilearn](outputs/01_nilearn.png) | ![nibabel](outputs/02_nibabel.png) | ![plotly](outputs/03_plotly.png) | ![pysurfer](outputs/04_pysurfer.png) |
 
 `03_plotly.py` also writes [`outputs/03_plotly.html`](outputs/03_plotly.html) —
 open it in a browser to rotate and zoom the mesh interactively.
@@ -62,9 +73,16 @@ open it in a browser to rotate and zoom the mesh interactively.
   on.
 - **Plotly** — feed `coords`/`faces` into `go.Mesh3d` for a dependency-light
   interactive 3D view that runs anywhere.
-- **PySurfer / FreeSurfer / MATLAB** — see the respective `.md` files.
+- **PySurfer** — `Brain("fsaverage", "lh", "inflated")` loads from a FreeSurfer
+  `SUBJECTS_DIR`; the script materializes one from the canonical GIFTI so the
+  geometry matches the others. Mayavi/VTK under the hood.
+- **FreeSurfer / MATLAB** — see the respective `.md` files.
 
 ## Requirements
 
 See [`requirements.txt`](requirements.txt): `nilearn`, `nibabel`, `plotly`,
 `matplotlib`, `kaleido` (for static Plotly PNG export). Verified on Python 3.14.
+
+PySurfer (`04_pysurfer.py`) uses a separate conda environment —
+[`environment-pysurfer.yml`](environment-pysurfer.yml) — verified with Python
+3.11 / mayavi 4.8.3 / pysurfer 0.11.2 / vtk 9.4.2 / numpy 1.26.

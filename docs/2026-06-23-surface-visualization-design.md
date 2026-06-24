@@ -66,6 +66,18 @@ and the rendered PNGs are committed to `outputs/` and embedded in the README.
 ## Decisions
 
 - **Interactive runnable tool:** plotly (renders to self-contained HTML with no
-  OpenGL/display), not pyvista. PySurfer stays documented-only.
+  OpenGL/display), not pyvista.
 - **Commit outputs:** rendered PNGs/HTML committed to `outputs/`; the larger
   `data/` download is gitignored.
+
+## Update (2026-06-23): PySurfer made runnable
+
+PySurfer was originally documented-only because Mayavi's `tvtk` build fails
+against every VTK wheel on Python 3.13/3.14. It is now a runnable example
+(`04_pysurfer.py`) via a dedicated **conda** environment
+(`environment-pysurfer.yml`: Python 3.11, mayavi 4.8.3, pysurfer 0.11.2, vtk
+9.4.2, numpy <2). The script materializes a minimal `fsaverage` `SUBJECTS_DIR`
+from the canonical GIFTI asset so PySurfer's `Brain` loads the *same* geometry
+as the other examples. macOS has no OSMesa, so rendering uses an on-screen
+OpenGL window; headless Linux can use `xvfb-run` + `mlab.options.offscreen`.
+Verified output committed to `outputs/04_pysurfer.png`.

@@ -1,0 +1,24 @@
+# Conda environment for the runnable PySurfer example (04_pysurfer.py).
+#
+# PySurfer depends on Mayavi, whose tvtk build does not compile against the VTK
+# wheels available for Python 3.12+. conda-forge ships a matched, prebuilt
+# stack, so this is the reliable way to run it.
+#
+#   conda env create -f environment-pysurfer.yml
+#   conda activate surface-pysurfer
+#   python 00_fetch_surface.py   # if data/ isn't populated yet
+#   python 04_pysurfer.py
+#
+# Verified on macOS (Apple Silicon) with the versions noted below.
+name: surface-pysurfer
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - mayavi=4.8.3
+  - pysurfer=0.11.2
+  - vtk=9.4.2
+  - numpy<2          # VTK 9.4 still calls numpy.in1d, removed in numpy 2.0
+  - nibabel
+  - nilearn
+  - pyqt
